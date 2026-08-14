@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Peserta Lomba</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c90024, #ed1c3b);
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,.15);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 13px;
+            font-weight: normal;
+            margin-top: 4px;
+            opacity: .9;
+        }
+
+        .header-btn {
+            background: white;
+            color: #c90024;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-icon {
+            font-size: 48px;
+        }
+
+        .hero h1 {
+            color: #c90024;
+            margin-top: 8px;
+            font-size: 32px;
+        }
+
+        .hero p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        .card-title {
+            margin-bottom: 22px;
+        }
+
+        .card-title h2 {
+            font-size: 21px;
+        }
+
+        .card-title p {
+            color: #777;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #c90024;
+            box-shadow: 0 0 0 3px rgba(201,0,36,.08);
+        }
+
+        .lomba-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lomba-area select {
+            flex: 1;
+        }
+
+        .new-lomba-btn {
+            border: none;
+            background: #ffe5e9;
+            color: #c90024;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .new-lomba-btn:hover {
+            background: #ffd5dc;
+        }
+
+        .new-lomba-box {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .new-lomba-box.active {
+            display: block;
+        }
+
+        .btn-submit {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #c90024, #ed1c3b);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            opacity: .92;
+        }
+
+        .info {
+            margin-top: 20px;
+            background: #fff5f6;
+            border-left: 4px solid #c90024;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            padding: 25px;
+        }
+
+        @media (max-width: 650px) {
+            .header {
+                padding: 16px 5%;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .header-btn {
+                font-size: 12px;
+                padding: 8px 11px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 28px auto;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .lomba-area {
+                flex-direction: column;
+            }
+
+            .new-lomba-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        🇮🇩 DATA PESERTA
+        <span>Perlombaan 17 Agustus</span>
+    </div>
+
+    <button class="header-btn" onclick="location.href='dashboard.html'">
+        📋 Daftar Peserta
+    </button>
+
+</header>
+
+
+<main class="container">
+
+    <div class="hero">
+        <div class="hero-icon">🏆</div>
+
+        <h1>Pendataan Peserta Lomba</h1>
+
+        <p>
+            Daftarkan peserta sesuai dengan lomba yang diikuti.
+        </p>
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            <h2>➕ Tambah Peserta</h2>
+
+            <p>
+                Pilih lomba yang sudah tersedia atau buat lomba baru.
+            </p>
+        </div>
+
+
+        <form id="pesertaForm">
+
+            <div class="form-group">
+
+                <label for="pilihLomba">
+                    Nama Lomba
+                </label>
+
+                <div class="lomba-area">
+
+                    <select id="pilihLomba">
+                        <option value="">
+                            -- Pilih Lomba --
+                        </option>
+                    </select>
+
+                    <button
+                    type="button"
+                    class="new-lomba-btn"
+                    id="btnLombaBaru"
+                    >
+                    ＋ Tambah Lomba
+                    </button>
+
+                </div>
+
+
+                <div
+                class="new-lomba-box"
+                id="newLombaBox"
+            >
+                <input
+                    type="text"
+                    id="namaLombaBaru"
+                    placeholder="Masukkan nama lomba baru"
+                >
+            </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="namaPeserta">
+                    Nama Peserta
+                </label>
+
+                <input
+                    type="text"
+                    id="namaPeserta"
+                    placeholder="Masukkan nama peserta"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="umur">
+                    Umur
+                </label>
+
+                <input type="number" id="umur" placeholder="Masukkan umur peserta" min="1" max="120" required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="rtRw">
+                    RT / RW
+                </label>
+
+                <input
+                    type="text"
+                    id="rtRw"
+                    placeholder="Contoh: RT 03 / RW 02"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="kategori">
+                    Kategori
+                </label>
+
+                <select id="kategori">
+
+                    <option value="Anak-anak">
+                        Anak-anak
+                    </option>
+
+                    <option value="Remaja">
+                        Remaja
+                    </option>
+
+                    <option value="Dewasa">
+                        Dewasa
+                    </option>
+
+                    <option value="Umum">
+                        Umum
+                    </option>
+
+                </select>
+            </div>
+
+            <button
+                type="submit"
+                class="btn-submit"
+            >
+                🇮🇩 Daftarkan Peserta
+            </button>
+
+        </form>
+
+
+        <div class="info">
+            💡 <b>Tips:</b> Setelah membuat sebuah lomba,
+            nama lomba tersebut otomatis muncul di pilihan
+            untuk pendaftaran peserta berikutnya.
+        </div>
+
+    </div>
+
+</main>
+
+
+<div class="footer">
+    🇮🇩 © 17 Agustus • Sistem Pendataan Peserta Lomba
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

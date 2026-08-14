@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daftar Peserta</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c90024, #ed1c3b);
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,.15);
+        }
+
+        .header h1 {
+            font-size: 23px;
+        }
+
+        .header p {
+            font-size: 13px;
+            margin-top: 4px;
+            opacity: .9;
+        }
+
+        .back-btn {
+            background: white;
+            color: #c90024;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            border-left: 5px solid #c90024;
+        }
+
+        .stat-icon {
+            font-size: 25px;
+        }
+
+        .stat h2 {
+            color: #c90024;
+            font-size: 30px;
+            margin-top: 7px;
+        }
+
+        .stat p {
+            color: #777;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .top h2 {
+            font-size: 20px;
+        }
+
+        .search {
+            width: 300px;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #c90024;
+        }
+
+        .filter {
+            margin-bottom: 25px;
+        }
+
+        .filter select {
+            padding: 10px 13px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            outline: none;
+        }
+
+        .lomba-card {
+            border: 1px solid #eee;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+
+        .lomba-header {
+            background: linear-gradient(
+                135deg,
+                #c90024,
+                #ed1c3b
+            );
+
+            color: white;
+            padding: 16px 18px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lomba-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .jumlah {
+            background: rgba(255,255,255,.18);
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            background: #fff4f5;
+            color: #c90024;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #fffafa;
+        }
+
+        .badge {
+            background: #ffe5e9;
+            color: #c90024;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .edit-btn {
+            background: #fff0c7;
+            color: #856404;
+        }
+
+        .delete-btn {
+            background: #ffe0e0;
+            color: #b00020;
+        }
+
+        .lomba-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .delete-lomba {
+            border: none;
+            background: rgba(255,255,255,.18);
+            color: white;
+            padding: 6px 9px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+
+            .header {
+                padding: 17px 5%;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header p {
+                font-size: 11px;
+            }
+
+            .back-btn {
+                font-size: 12px;
+                padding: 8px 11px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search {
+                width: 100%;
+            }
+
+            .lomba-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div>
+        <h1>🇮🇩 Daftar Peserta</h1>
+        <p>Data peserta perlombaan 17 Agustus</p>
+    </div>
+
+    <button
+        class="back-btn"
+        onclick="location.href='index.html'"
+    >
+        ← Tambah Peserta
+    </button>
+
+</header>
+
+
+<main class="container">
+
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <h2 id="totalPeserta">
+                0
+            </h2>
+
+            <p>
+                Total Peserta
+            </p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🏆
+            </div>
+
+            <h2 id="totalLomba">
+                0
+            </h2>
+
+            <p>
+                Total Lomba
+            </p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <h2 id="totalKategori">
+                0
+            </h2>
+
+            <p>
+                Kategori Terdaftar
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="content">
+
+        <div class="top">
+
+            <div>
+                <h2>
+                    🏆 Daftar Peserta Per Lomba
+                </h2>
+            </div>
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search"
+                placeholder="🔍 Cari peserta..."
+            >
+
+        </div>
+
+
+        <div class="filter">
+
+            <select id="filterLomba">
+
+                <option value="">
+                    Semua Lomba
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div id="lombaContainer"></div>
+
+
+        <div
+            id="emptyState"
+            class="empty"
+            style="display:none;"
+        >
+
+            <div class="empty-icon">
+                📭
+            </div>
+
+            <h3>
+                Belum Ada Peserta
+            </h3>
+
+            <p>
+                Silakan tambahkan peserta terlebih dahulu.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div class="footer">
+    🇮🇩 © 17 Agustus • Sistem Pendataan Peserta Lomba
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
+```
