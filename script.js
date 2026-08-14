@@ -27,30 +27,47 @@ const db = getDatabase(app);
 // HALAMAN INDEX
 // =======================
 
-const pesertaForm = document.getElementById("pesertaForm");
+const btnTambah =
+document.getElementById("btnLombaBaru");
 
-if (pesertaForm) {
-  loadLomba();
+const box =
+document.getElementById("newLombaBox");
 
-  document
-    .getElementById("btnLombaBaru")
-    ?.addEventListener("click", tambahLomba);
+const btnSimpan =
+document.getElementById("simpanLomba");
 
-  pesertaForm.addEventListener("submit", simpanPeserta);
-}
+btnTambah.addEventListener("click", () => {
+    box.style.display = "block";
+});
 
-async function tambahLomba() {
-  const nama = prompt("Nama lomba:");
+btnSimpan.addEventListener("click", async () => {
 
-  if (!nama) return;
+    const nama =
+    document
+    .getElementById("namaLombaBaru")
+    .value
+    .trim();
 
-  await push(ref(db, "lomba"), {
-    nama: nama.trim()
-  });
+    if (!nama) {
+        alert("Isi nama lomba");
+        return;
+    }
 
-  alert("Lomba berhasil ditambahkan");
-  loadLomba();
-}
+    await push(
+        ref(db, "lomba"),
+        { nama }
+    );
+
+    document
+    .getElementById("namaLombaBaru")
+    .value = "";
+
+    box.style.display = "none";
+
+    loadLomba();
+
+    alert("Lomba berhasil ditambahkan");
+});
 
 async function loadLomba() {
   const select = document.getElementById("pilihLomba");
