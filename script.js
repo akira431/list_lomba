@@ -1874,3 +1874,6 @@ function tutupBracket() {
         box.remove();
     }
 }
+
+window.pilihPemenang = pilihPemenang;
+window.tutupBracket = tutupBracket;
