@@ -1,24 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  get,
-  remove,
-  update
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 // FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyDxdZn5Gq9qGl-Ds5UoU79e71O9CUhDxLE",
-  authDomain: "list-lomba.firebaseapp.com",
-  databaseURL: "https://list-lomba-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "list-lomba",
-  storageBucket: "list-lomba.firebasestorage.app",
-  messagingSenderId: "448630145151",
-  appId: "1:448630145151:web:c94c35b50414d378be7f4a"
-};
+    apiKey: "AIzaSyDxdZn5Gq9qGl-Ds5UoU79e71O9CUhDxLE",
+    authDomain: "list-lomba.firebaseapp.com",
+    databaseURL: "https://list-lomba-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "list-lomba",
+    storageBucket: "list-lomba.firebasestorage.app",
+    messagingSenderId: "448630145151",
+    appId: "1:448630145151:web:c94c35b50414d378be7f4a",
+    measurementId: "G-TDZBM327P7"
+  };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
