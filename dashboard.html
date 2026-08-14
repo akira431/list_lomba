@@ -902,11 +902,6 @@
           </div>
 
           <div class="modal-group">
-            <label for="editKontak">No. WhatsApp / HP</label>
-            <input type="tel" id="editKontak" />
-          </div>
-
-          <div class="modal-group">
             <label for="editKategori">Kategori</label>
             <select id="editKategori" required>
               <option value="Anak-anak">Anak-anak</option>
@@ -1073,9 +1068,8 @@
           if (search) {
             const matchNama = (p.namaPeserta || "").toLowerCase().includes(search);
             const matchRt = (p.rtRw || "").toLowerCase().includes(search);
-            const matchKontak = (p.kontak || "").toLowerCase().includes(search);
             const matchStatus = (p.status || "").toLowerCase().includes(search);
-            if (!matchNama && !matchRt && !matchKontak && !matchStatus) return false;
+            if (!matchNama && !matchRt && !matchStatus) return false;
           }
           return true;
         });
@@ -1109,9 +1103,6 @@
                 </td>
                 <td>${p.umur} th</td>
                 <td><i class="fa-solid fa-location-dot" style="color: #ef4444; font-size: 0.8rem;"></i> ${p.rtRw || "-"}</td>
-                <td>
-                  ${p.kontak && p.kontak !== "-" ? `<a href="https://wa.me/${p.kontak.replace(/[^0-9]/g, '')}" target="_blank" style="color: #059669; text-decoration: none; font-weight: 600;"><i class="fa-brands fa-whatsapp"></i> ${p.kontak}</a>` : '<span style="color:#94a3b8;">-</span>'}
-                </td>
                 <td><span class="badge-category">${p.kategori || "Umum"}</span></td>
                 <td><span class="badge-status ${statusClass}">${p.status || "Terdaftar"}</span></td>
                 <td style="width: 90px;">
@@ -1152,7 +1143,6 @@
                   <th>Nama Peserta / Tim</th>
                   <th>Usia</th>
                   <th>Asal RT/RW</th>
-                  <th>Kontak</th>
                   <th>Kategori</th>
                   <th>Status</th>
                   <th>Aksi</th>
@@ -1188,7 +1178,6 @@
       document.getElementById("editNama").value = p.namaPeserta || "";
       document.getElementById("editUmur").value = p.umur || "";
       document.getElementById("editRtRw").value = p.rtRw && p.rtRw !== "-" ? p.rtRw : "";
-      document.getElementById("editKontak").value = p.kontak && p.kontak !== "-" ? p.kontak : "";
       document.getElementById("editKategori").value = p.kategori || "Umum";
       document.getElementById("editStatus").value = p.status || "Terdaftar";
 
@@ -1224,7 +1213,6 @@
       const namaLomba = document.getElementById("editLomba").value;
       const umur = Number(document.getElementById("editUmur").value);
       const rtRw = document.getElementById("editRtRw").value.trim() || "-";
-      const kontak = document.getElementById("editKontak").value.trim() || "-";
       const kategori = document.getElementById("editKategori").value;
       const status = document.getElementById("editStatus").value;
 
@@ -1234,7 +1222,6 @@
           namaLomba,
           umur,
           rtRw,
-          kontak,
           kategori,
           status
         });
@@ -1330,9 +1317,9 @@
         return;
       }
 
-      let csv = "No,Nama Peserta,Cabang Lomba,Usia,Asal RT/RW,Kontak WhatsApp,Kategori,Status\n";
+      let csv = "No,Nama Peserta,Cabang Lomba,Usia,Asal RT/RW,Kategori,Status\n";
       pesertaData.forEach((p, i) => {
-        csv += `"${i + 1}","${(p.namaPeserta || '').replace(/"/g, '""')}","${(p.namaLomba || '').replace(/"/g, '""')}","${p.umur || ''}","${(p.rtRw || '').replace(/"/g, '""')}","${(p.kontak || '').replace(/"/g, '""')}","${(p.kategori || '').replace(/"/g, '""')}","${(p.status || '').replace(/"/g, '""')}"\n`;
+        csv += `"${i + 1}","${(p.namaPeserta || '').replace(/"/g, '""')}","${(p.namaLomba || '').replace(/"/g, '""')}","${p.umur || ''}","${(p.rtRw || '').replace(/"/g, '""')}","${(p.kategori || '').replace(/"/g, '""')}","${(p.status || '').replace(/"/g, '""')}"\n`;
       });
 
       const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
