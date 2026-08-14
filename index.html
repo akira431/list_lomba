@@ -577,21 +577,12 @@
                     </div>
 
                     <!-- RT / RW -->
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="rtRw">
                             <i class="fa-solid fa-location-dot"></i>
                             Asal Wilayah (RT / RW)
                         </label>
                         <input type="text" id="rtRw" placeholder="Contoh: RT 03 / RW 05" />
-                    </div>
-
-                    <!-- Kontak / WhatsApp -->
-                    <div class="form-group">
-                        <label for="kontak">
-                            <i class="fa-brands fa-whatsapp"></i>
-                            No. WhatsApp / HP (Opsional)
-                        </label>
-                        <input type="tel" id="kontak" placeholder="Contoh: 081234567890" />
                     </div>
 
                 </div>
@@ -748,7 +739,6 @@
             const umur = Number(document.getElementById("umur").value);
             const kategori = document.getElementById("kategori").value;
             const rtRw = document.getElementById("rtRw").value.trim() || "-";
-            const kontak = document.getElementById("kontak").value.trim() || "-";
 
             if (!namaLomba) {
                 Swal.fire({
@@ -769,7 +759,6 @@
                     umur,
                     kategori,
                     rtRw,
-                    kontak,
                     namaLomba,
                     status: "Terdaftar",
                     tanggal: new Date()
