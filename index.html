@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pendaftaran Lomba 17 Agustus | Dirgahayu RI</title>
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary: #c90024;
+            --primary-dark: #a0001c;
+            --primary-light: #ff4d6d;
+            --primary-subtle: #fff0f3;
+            --secondary: #0f172a;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 24px rgba(201, 0, 36, 0.08);
+            --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Banner / Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #c90024 0%, #ed1c3b 60%, #ff4d6d 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(201, 0, 36, 0.25);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .flag-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 0.78rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 860px;
+            margin: 2rem auto;
+            padding: 0 1.25rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Hero Card */
+        .hero-banner {
+            background: linear-gradient(135deg, #fff 0%, #fff5f6 100%);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid #ffd6dc;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '🇮🇩';
+            position: absolute;
+            right: 20px;
+            bottom: -15px;
+            font-size: 6.5rem;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .stats-pill-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .stats-pill {
+            background: white;
+            border: 1px solid #ffccd5;
+            color: var(--primary-dark);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2.25rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-header {
+            margin-bottom: 1.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .req {
+            color: var(--primary);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background: #fafafa;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(201, 0, 36, 0.1);
+        }
+
+        .lomba-select-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-add-lomba-toggle {
+            background: var(--primary-subtle);
+            color: var(--primary);
+            border: 1.5px dashed var(--primary-light);
+            padding: 0 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-add-lomba-toggle:hover {
+            background: #ffd6dc;
+            transform: translateY(-1px);
+        }
+
+        .new-lomba-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background: #fff8f9;
+            border: 1px solid #ffccd5;
+            border-radius: var(--radius-md);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .new-lomba-inner {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-save-lomba {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-save-lomba:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #c90024 0%, #ed1c3b 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(201, 0, 36, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(201, 0, 36, 0.35);
+            background: linear-gradient(135deg, #a0001c 0%, #c90024 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .info-footer {
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: #fff0f3;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            color: #881337;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            background: white;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .lomba-select-group {
+                flex-direction: column;
+            }
+
+            .btn-add-lomba-toggle {
+                padding: 10px;
+                justify-content: center;
+            }
+
+            .hero-banner {
+                padding: 1.25rem;
+            }
+
+            .hero-title {
+                font-size: 1.35rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Terpadu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="flag-icon">🇮🇩</span>
+                <div class="brand-text">
+                    <h1>PANITIA 17 AGUSTUS</h1>
+                    <p>Sistem Manajemen & Pertandingan Lomba</p>
+                </div>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-item active">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Pendaftaran</span>
+                </a>
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span>Data Peserta</span>
+                </a>
+                <a href="bagan.html" class="nav-item">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <span>Bagan Lomba</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="main-container">
+
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <h2 class="hero-title">
+                <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
+                Form Pendaftaran Peserta Lomba
+            </h2>
+            <p class="hero-subtitle">
+                Dirgahayu Republik Indonesia ke-79! Daftarkan warga dan peserta lomba secara mudah, cepat, dan otomatis
+                tersinkronisasi realtime ke sistem panitia.
+            </p>
+
+            <div class="stats-pill-group">
+                <div class="stats-pill">
+                    <i class="fa-solid fa-flag text-danger"></i>
+                    <span>Lomba 17-an Warga</span>
+                </div>
+                <div class="stats-pill">
+                    <i class="fa-solid fa-bolt text-warning"></i>
+                    <span>Sinkronisasi Realtime Cloud</span>
+                </div>
+                <div class="stats-pill">
+                    <i class="fa-solid fa-diagram-project text-primary"></i>
+                    <span>Bagan Turnamen Otomatis</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Form -->
+        <section class="form-card">
+            <div class="form-header">
+                <h2>
+                    <i class="fa-solid fa-id-card" style="color: var(--primary);"></i>
+                    Isi Data Pendaftar
+                </h2>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">
+                    <span class="req">*</span> Wajib diisi
+                </span>
+            </div>
+
+            <form id="pesertaForm">
+                <div class="form-grid">
+
+                    <!-- Nama Lomba -->
+                    <div class="form-group full-width">
+                        <label for="pilihLomba">
+                            <i class="fa-solid fa-medal"></i>
+                            Cabang Perlombaan <span class="req">*</span>
+                        </label>
+                        <div class="lomba-select-group">
+                            <select id="pilihLomba" required>
+                                <option value="">⏳ Memuat daftar lomba...</option>
+                            </select>
+                            <button type="button" class="btn-add-lomba-toggle" id="btnTambahLomba">
+                                <i class="fa-solid fa-plus-circle"></i> Tambah Lomba Baru
+                            </button>
+                        </div>
+
+                        <div id="newLombaArea" class="new-lomba-box">
+                            <div class="new-lomba-inner">
+                                <input type="text" id="namaLombaBaru"
+                                    placeholder="Tulis nama lomba baru (contoh: Balap Karung Helm, Tarik Tambang)" />
+                                <button type="button" class="btn-save-lomba" id="btnSimpanLombaBaru">
+                                    <i class="fa-solid fa-check"></i> Simpan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nama Peserta -->
+                    <div class="form-group full-width">
+                        <label for="namaPeserta">
+                            <i class="fa-solid fa-user"></i>
+                            Nama Lengkap Peserta / Tim <span class="req">*</span>
+                        </label>
+                        <input type="text" id="namaPeserta" placeholder="Masukkan nama peserta atau tim..." required
+                            autocomplete="off" />
+                    </div>
+
+                    <!-- Umur -->
+                    <div class="form-group">
+                        <label for="umur">
+                            <i class="fa-solid fa-cake-candles"></i>
+                            Usia / Umur <span class="req">*</span>
+                        </label>
+                        <input type="number" id="umur" placeholder="Contoh: 17" min="3" max="100" required />
+                    </div>
+
+                    <!-- Kategori -->
+                    <div class="form-group">
+                        <label for="kategori">
+                            <i class="fa-solid fa-users"></i>
+                            Kategori Peserta <span class="req">*</span>
+                        </label>
+                        <select id="kategori" required>
+                            <option value="Anak-anak">👦 Anak-anak (3 - 12 th)</option>
+                            <option value="Remaja">🧑 Remaja (13 - 18 th)</option>
+                            <option value="Dewasa">👨 Dewasa (19 - 45 th)</option>
+                            <option value="Ibu-ibu">👩 Ibu-ibu</option>
+                            <option value="Bapak-bapak">🧔 Bapak-bapak</option>
+                            <option value="Umum" selected>👥 Umum / Semua Usia</option>
+                        </select>
+                    </div>
+
+                    <!-- RT / RW -->
+                    <div class="form-group">
+                        <label for="rtRw">
+                            <i class="fa-solid fa-location-dot"></i>
+                            Asal Wilayah (RT / RW)
+                        </label>
+                        <input type="text" id="rtRw" placeholder="Contoh: RT 03 / RW 05" />
+                    </div>
+
+                    <!-- Kontak / WhatsApp -->
+                    <div class="form-group">
+                        <label for="kontak">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            No. WhatsApp / HP (Opsional)
+                        </label>
+                        <input type="tel" id="kontak" placeholder="Contoh: 081234567890" />
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Daftarkan Peserta Sekarang</span>
+                </button>
+            </form>
+
+            <div class="info-footer">
+                <i class="fa-solid fa-circle-info" style="font-size: 1.25rem;"></i>
+                <div>
+                    Data peserta langsung masuk ke database panitia. Anda dapat memantau rekap di <strong>Data
+                        Peserta</strong> atau mengatur pertandingan di <strong>Bagan Lomba</strong>.
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Panitia Semarak Kemerdekaan RI 🇮🇩 &bull; Sistem Informasi & Bagan Pertandingan Lomba</p>
+    </footer>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxdZn5Gq9qGl-Ds5UoU79e71O9CUhDxLE",
+            authDomain: "list-lomba.firebaseapp.com",
+            projectId: "list-lomba",
+            storageBucket: "list-lomba.firebasestorage.app",
+            messagingSenderId: "448630145151",
+            appId: "1:448630145151:web:c94c35b50414d378be7f4a",
+            measurementId: "G-TDZBM327P7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const pesertaForm = document.getElementById("pesertaForm");
+        const pilihLomba = document.getElementById("pilihLomba");
+        const btnTambahLomba = document.getElementById("btnTambahLomba");
+        const newLombaArea = document.getElementById("newLombaArea");
+        const namaLombaBaru = document.getElementById("namaLombaBaru");
+        const btnSimpanLombaBaru = document.getElementById("btnSimpanLombaBaru");
+        const btnSubmit = document.getElementById("btnSubmit");
+
+        // Load Lomba from Firestore
+        async function loadLomba(selectValue = null) {
+            try {
+                pilihLomba.innerHTML = '<option value="">-- Pilih Cabang Lomba --</option>';
+                const snapshot = await getDocs(collection(db, "lomba"));
+
+                let count = 0;
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.nama) {
+                        count++;
+                        const opt = document.createElement("option");
+                        opt.value = data.nama;
+                        opt.textContent = `🏆 ${data.nama}`;
+                        if (selectValue && data.nama === selectValue) {
+                            opt.selected = true;
+                        }
+                        pilihLomba.appendChild(opt);
+                    }
+                });
+
+                if (count === 0) {
+                    pilihLomba.innerHTML = '<option value="">Belum ada lomba, klik Tambah Lomba Baru</option>';
+                }
+            } catch (err) {
+                console.error("Error loading lomba:", err);
+                pilihLomba.innerHTML = '<option value="">Gagal memuat daftar lomba</option>';
+            }
+        }
+
+        loadLomba();
+
+        // Toggle Input Lomba Baru
+        btnTambahLomba.addEventListener("click", () => {
+            if (newLombaArea.style.display === "block") {
+                newLombaArea.style.display = "none";
+            } else {
+                newLombaArea.style.display = "block";
+                namaLombaBaru.focus();
+            }
+        });
+
+        // Simpan Lomba Baru
+        btnSimpanLombaBaru.addEventListener("click", async () => {
+            const nama = namaLombaBaru.value.trim();
+            if (!nama) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: 'Harap masukkan nama cabang lomba!',
+                    confirmButtonColor: '#c90024'
+                });
+                return;
+            }
+
+            btnSimpanLombaBaru.disabled = true;
+            btnSimpanLombaBaru.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+            try {
+                await addDoc(collection(db, "lomba"), {
+                    nama: nama,
+                    createdAt: new Date()
+                });
+
+                namaLombaBaru.value = "";
+                newLombaArea.style.display = "none";
+                await loadLomba(nama);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Lomba Ditambahkan!',
+                    text: `Cabang lomba "${nama}" berhasil dibuat.`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan saat menambahkan lomba.',
+                    confirmButtonColor: '#c90024'
+                });
+            } finally {
+                btnSimpanLombaBaru.disabled = false;
+                btnSimpanLombaBaru.innerHTML = '<i class="fa-solid fa-check"></i> Simpan';
+            }
+        });
+
+        // Submit Pendaftaran Peserta
+        pesertaForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const namaLomba = pilihLomba.value;
+            const namaPeserta = document.getElementById("namaPeserta").value.trim();
+            const umur = Number(document.getElementById("umur").value);
+            const kategori = document.getElementById("kategori").value;
+            const rtRw = document.getElementById("rtRw").value.trim() || "-";
+            const kontak = document.getElementById("kontak").value.trim() || "-";
+
+            if (!namaLomba) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Lomba',
+                    text: 'Silakan pilih cabang lomba terlebih dahulu!',
+                    confirmButtonColor: '#c90024'
+                });
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan data...';
+
+            try {
+                await addDoc(collection(db, "peserta"), {
+                    namaPeserta,
+                    umur,
+                    kategori,
+                    rtRw,
+                    kontak,
+                    namaLomba,
+                    status: "Terdaftar",
+                    tanggal: new Date()
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pendaftaran Berhasil! 🎉',
+                    html: `Peserta <b>${namaPeserta}</b> telah terdaftar untuk lomba <b>${namaLomba}</b>.`,
+                    confirmButtonColor: '#c90024',
+                    showCancelButton: true,
+                    confirmButtonText: '📋 Lihat Data Peserta',
+                    cancelButtonText: '➕ Tambah Lagi'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "dashboard.html";
+                    }
+                });
+
+                pesertaForm.reset();
+                loadLomba(namaLomba); // keep the chosen lomba
+            } catch (err) {
+                console.error("Error submit peserta:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menyimpan',
+                    text: 'Terjadi kendala saat menyimpan pendaftaran. Silakan coba lagi.',
+                    confirmButtonColor: '#c90024'
+                });
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Daftarkan Peserta Sekarang</span>';
+            }
+        });
+    </script>
+</body>
+
+</html>
