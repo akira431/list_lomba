@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard & Rekap Peserta Lomba | Panitia 17 Agustus</title>
+  <title>Bagan Pertandingan Lomba | Panitia 17 Agustus</title>
 
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,8 +13,9 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- SweetAlert2 -->
+  <!-- SweetAlert2 & Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
@@ -23,11 +24,15 @@
       --primary-light: #ff4d6d;
       --primary-subtle: #fff0f3;
       --secondary: #0f172a;
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #d97706;
       --text-main: #1e293b;
       --text-muted: #64748b;
-      --bg-body: #f8fafc;
+      --bg-body: #f1f5f9;
       --card-bg: #ffffff;
-      --border-color: #e2e8f0;
+      --border-color: #cbd5e1;
+      --match-border: #e2e8f0;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -63,7 +68,7 @@
     }
 
     .nav-container {
-      max-width: 1280px;
+      max-width: 1360px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -133,158 +138,75 @@
 
     /* Container */
     .container {
-      max-width: 1280px;
+      max-width: 1360px;
       margin: 1.5rem auto;
       padding: 0 1.25rem;
       width: 100%;
       flex: 1;
     }
 
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+    /* Header Controls Card */
+    .header-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
       margin-bottom: 1.5rem;
     }
 
-    .stat-card {
-      background: white;
-      padding: 1.25rem;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .stat-icon-wrapper {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-
-    .icon-red {
-      background: #ffe5e9;
-      color: var(--primary);
-    }
-
-    .icon-blue {
-      background: #e0f2fe;
-      color: #0284c7;
-    }
-
-    .icon-amber {
-      background: #fef3c7;
-      color: #d97706;
-    }
-
-    .icon-emerald {
-      background: #d1fae5;
-      color: #059669;
-    }
-
-    .stat-info p {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .stat-info h3 {
-      font-size: 1.65rem;
-      font-weight: 800;
-      color: var(--secondary);
-      line-height: 1.2;
-    }
-
-    /* Control Bar */
-    .control-card {
-      background: white;
-      padding: 1.25rem;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-color);
-      margin-bottom: 1.5rem;
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--match-border);
     }
 
-    .filters-left {
+    .lomba-selector-wrapper {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
       flex-wrap: wrap;
-      flex: 1;
     }
 
-    .search-box {
-      position: relative;
-      min-width: 240px;
-      flex: 1;
-    }
-
-    .search-box i {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 0.65rem 1rem 0.65rem 2.25rem;
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(201, 0, 36, 0.1);
-    }
-
-    .filter-select {
-      padding: 0.65rem 1rem;
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-      background: white;
-      color: var(--text-main);
-      cursor: pointer;
-    }
-
-    .filter-select:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .actions-right {
+    .lomba-selector-wrapper label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--secondary);
       display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .select-lomba {
+      padding: 0.65rem 1.25rem;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: white;
+      color: var(--primary);
+      cursor: pointer;
+      min-width: 250px;
+    }
+
+    .select-lomba:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(201, 0, 36, 0.15);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
 
     .btn-action {
-      padding: 0.65rem 1rem;
+      padding: 0.65rem 1.1rem;
       border-radius: var(--radius-sm);
       font-size: 0.88rem;
       font-weight: 700;
@@ -307,6 +229,15 @@
       transform: translateY(-1px);
     }
 
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background: #d97706;
+    }
+
     .btn-outline {
       background: white;
       border: 1.5px solid var(--border-color);
@@ -315,363 +246,501 @@
 
     .btn-outline:hover {
       background: #f1f5f9;
-      border-color: #cbd5e1;
+      border-color: #94a3b8;
     }
 
-    .btn-success {
-      background: #059669;
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: #047857;
-    }
-
-    /* Lomba Section Card */
-    .lomba-section {
+    .btn-danger-outline {
       background: white;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 1.75rem;
-      overflow: hidden;
-      transition: box-shadow 0.2s ease;
-    }
-
-    .lomba-section:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .lomba-header {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      color: white;
-      padding: 1rem 1.25rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .lomba-title-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .lomba-title-box h2 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .badge-count {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 3px 10px;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .lomba-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .btn-bracket {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .btn-bracket:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
-    }
-
-    .btn-delete-lomba {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-delete-lomba:hover {
-      background: #ef4444;
-      color: white;
-    }
-
-    /* Table Styles */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-      padding: 12px 16px;
-      border-bottom: 1.5px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #f1f5f9;
-      color: var(--text-main);
-      vertical-align: middle;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr:hover td {
-      background-color: #fdf2f4;
-    }
-
-    .badge-category {
-      background: #e2e8f0;
-      color: #334155;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .badge-status {
-      padding: 4px 10px;
-      border-radius: 50px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-
-    .status-terdaftar {
-      background: #e0f2fe;
-      color: #0369a1;
-    }
-
-    .status-lolos {
-      background: #d1fae5;
-      color: #047857;
-    }
-
-    .status-gugur {
-      background: #f1f5f9;
-      color: #64748b;
-    }
-
-    .status-juara1 {
-      background: #fef3c7;
-      color: #b45309;
-      border: 1px solid #f59e0b;
-    }
-
-    .status-juara2 {
-      background: #f1f5f9;
-      color: #475569;
-      border: 1px solid #cbd5e1;
-    }
-
-    .status-juara3 {
-      background: #ffedd5;
-      color: #c2410c;
-      border: 1px solid #fb923c;
-    }
-
-    .action-btn-group {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-table {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.15s ease;
-    }
-
-    .btn-edit {
-      background: #fef3c7;
-      color: #d97706;
-    }
-
-    .btn-edit:hover {
-      background: #fde68a;
-    }
-
-    .btn-del {
-      background: #fee2e2;
+      border: 1.5px solid #fecaca;
       color: #dc2626;
     }
 
-    .btn-del:hover {
-      background: #fecaca;
+    .btn-danger-outline:hover {
+      background: #fee2e2;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1.5rem;
-      background: white;
-      border-radius: var(--radius-lg);
-      border: 1px dashed var(--border-color);
-      color: var(--text-muted);
-    }
-
-    .empty-state i {
-      font-size: 3rem;
-      color: #cbd5e1;
-      margin-bottom: 1rem;
-    }
-
-    /* Modal Edit */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .modal-card {
-      background: white;
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 520px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      animation: modalSlide 0.25s ease;
-    }
-
-    @keyframes modalSlide {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-header {
-      background: linear-gradient(135deg, #c90024 0%, #ed1c3b 100%);
-      color: white;
-      padding: 1.25rem;
+    .header-bottom-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
 
-    .modal-header h3 {
-      font-size: 1.15rem;
+    .info-badge {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Podium Section */
+    .podium-card {
+      display: none;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .podium-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fbbf24;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 800px;
+      margin: 0 auto;
+      align-items: end;
+    }
+
+    .podium-place {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1rem;
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s;
+    }
+
+    .podium-place:hover {
+      transform: translateY(-4px);
+    }
+
+    .place-1 {
+      border-color: #f59e0b;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+      transform: scale(1.08);
+      z-index: 2;
+    }
+
+    .place-medal {
+      font-size: 2.25rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .place-rank {
+      font-size: 0.8rem;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .place-1 .place-rank {
+      color: #f59e0b;
+    }
+
+    .place-2 .place-rank {
+      color: #cbd5e1;
+    }
+
+    .place-3 .place-rank {
+      color: #fdba74;
+    }
+
+    .place-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      word-break: break-word;
+    }
+
+    /* Bracket Container */
+    .bracket-workspace {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+      min-height: 480px;
+    }
+
+    .bracket-wrapper {
+      display: flex;
+      gap: 3.5rem;
+      min-width: fit-content;
+      padding: 1rem 0.5rem;
+    }
+
+    .round-column {
+      display: flex;
+      flex-direction: column;
+      width: 250px;
+      flex-shrink: 0;
+    }
+
+    .round-header {
+      text-align: center;
+      padding: 0.65rem;
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .round-header.final-header {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border-color: #f59e0b;
+    }
+
+    .round-matches {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      flex: 1;
+      gap: 2rem;
+    }
+
+    /* Match Card */
+    .match-box {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .match-box:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      border-color: #94a3b8;
+    }
+
+    .match-tag {
+      background: #f1f5f9;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .participant-slot {
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      position: relative;
+    }
+
+    .participant-slot:first-of-type {
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .participant-slot:hover {
+      background: #fff5f6;
+    }
+
+    .participant-slot.winner {
+      background: #ecfdf5;
+      font-weight: 700;
+    }
+
+    .participant-slot.loser {
+      opacity: 0.55;
+      background: #f8fafc;
+    }
+
+    .participant-slot.empty {
+      color: #94a3b8;
+      font-style: italic;
+      cursor: default;
+    }
+
+    .participant-slot.empty:hover {
+      background: transparent;
+    }
+
+    .slot-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .seed-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #94a3b8;
+      background: #f1f5f9;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .slot-name {
+      font-size: 0.88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .slot-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .badge-win {
+      color: #059669;
+    }
+
+    .badge-bye {
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+    }
+
+    /* Third place box */
+    .third-place-box {
+      margin-top: 1.5rem;
+      border-color: #fdba74;
+    }
+
+    .third-place-box .match-tag {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    /* Setup / Generator Screen */
+    .setup-screen {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      border: 1px dashed var(--border-color);
+    }
+
+    .setup-screen i.main-icon {
+      font-size: 3.5rem;
+      color: #f59e0b;
+      margin-bottom: 1rem;
+    }
+
+    .setup-screen h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .setup-screen p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 540px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.5;
+    }
+
+    .participant-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      max-width: 700px;
+      margin: 0 auto 2rem auto;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .chip {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .setup-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Manual Reorder Panel */
+    .manual-panel {
+      display: none;
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .manual-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px dashed #f1f5f9;
+    }
+
+    .manual-panel-header h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--secondary);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .modal-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.25rem;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      padding: 1.5rem;
+    .sortable-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 8px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 4px 2px;
     }
 
-    .modal-footer {
-      padding: 1rem 1.5rem;
+    .sortable-item {
       background: #f8fafc;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    .modal-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .modal-group label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #334155;
-    }
-
-    .modal-group input,
-    .modal-group select {
-      padding: 0.75rem;
       border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: grab;
+      transition: all 0.15s ease;
+      user-select: none;
     }
 
-    .modal-group input:focus,
-    .modal-group select:focus {
-      outline: none;
+    .sortable-item:hover {
       border-color: var(--primary);
+      background: #fff5f6;
+      box-shadow: 0 2px 8px rgba(201,0,36,0.08);
+    }
+
+    .sortable-item.dragging {
+      opacity: 0.45;
+      cursor: grabbing;
+    }
+
+    .sortable-item.drag-over {
+      border-color: var(--primary);
+      background: #fff0f3;
+      transform: scale(1.02);
+    }
+
+    .drag-handle {
+      color: #94a3b8;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .sortable-item:hover .drag-handle {
+      color: var(--primary);
+    }
+
+    .item-num {
+      background: var(--primary);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .item-name {
+      font-weight: 700;
+      color: var(--secondary);
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    .item-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .manual-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
     }
 
     /* Print styling */
     @media print {
 
       .navbar,
-      .control-card,
-      .btn-action,
-      .lomba-actions,
-      .action-btn-group,
+      .header-top,
+      .header-bottom-info,
+      .header-actions,
       footer {
         display: none !important;
       }
@@ -686,20 +755,28 @@
         padding: 0;
       }
 
-      .lomba-section {
-        border: 1px solid #000;
+      .bracket-workspace {
+        border: none;
         box-shadow: none;
-        break-inside: avoid;
-        margin-bottom: 20px;
+        padding: 0;
       }
 
-      .lomba-header {
+      .round-column {
+        width: 200px;
+      }
+
+      .bracket-wrapper {
+        gap: 1.5rem;
+      }
+
+      .podium-card {
         background: #f1f1f1 !important;
-        color: #000 !important;
+        color: black !important;
+        border: 1px solid #000;
       }
 
-      .lomba-title-box h2 {
-        color: #000 !important;
+      .place-name {
+        color: black !important;
       }
     }
 
@@ -713,37 +790,32 @@
       background: white;
     }
 
-    @media (max-width: 900px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .control-card {
+    @media (max-width: 768px) {
+      .header-top {
         flex-direction: column;
         align-items: stretch;
       }
 
-      .filters-left {
-        flex-direction: column;
-      }
-
-      .search-box {
+      .select-lomba {
         width: 100%;
       }
 
-      .actions-right {
-        justify-content: stretch;
+      .header-actions {
+        width: 100%;
       }
 
-      .actions-right .btn-action {
+      .header-actions .btn-action {
         flex: 1;
         justify-content: center;
+      }
+
+      .podium-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .place-1 {
+        transform: none;
       }
     }
   </style>
@@ -767,11 +839,11 @@
           <i class="fa-solid fa-user-plus"></i>
           <span>Pendaftaran</span>
         </a>
-        <a href="dashboard.html" class="nav-item active">
+        <a href="dashboard.html" class="nav-item">
           <i class="fa-solid fa-table-list"></i>
           <span>Data Peserta</span>
         </a>
-        <a href="bagan.html" class="nav-item">
+        <a href="bagan.html" class="nav-item active">
           <i class="fa-solid fa-sitemap"></i>
           <span>Bagan Lomba</span>
         </a>
@@ -781,160 +853,85 @@
 
   <main class="container">
 
-    <!-- Stats Banner -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon-wrapper icon-red">
-          <i class="fa-solid fa-users"></i>
-        </div>
-        <div class="stat-info">
-          <p>Total Peserta</p>
-          <h3 id="statTotalPeserta">0</h3>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon-wrapper icon-amber">
-          <i class="fa-solid fa-trophy"></i>
-        </div>
-        <div class="stat-info">
-          <p>Total Cabang Lomba</p>
-          <h3 id="statTotalLomba">0</h3>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon-wrapper icon-blue">
-          <i class="fa-solid fa-layer-group"></i>
-        </div>
-        <div class="stat-info">
-          <p>Kategori Usia</p>
-          <h3 id="statTotalKategori">0</h3>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon-wrapper icon-emerald">
-          <i class="fa-solid fa-map-location-dot"></i>
-        </div>
-        <div class="stat-info">
-          <p>Asal RT / RW</p>
-          <h3 id="statTotalWilayah">0</h3>
-        </div>
-      </div>
-    </section>
-
-    <!-- Controls Bar -->
-    <section class="control-card">
-      <div class="filters-left">
-        <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="searchInput" placeholder="Cari nama peserta, RT/RW, dll..." />
+    <!-- Top Control Bar -->
+    <section class="header-card">
+      <div class="header-top">
+        <div class="lomba-selector-wrapper">
+          <label for="selectLomba">
+            <i class="fa-solid fa-trophy" style="color: #f59e0b; font-size: 1.25rem;"></i>
+            Pilih Cabang Lomba:
+          </label>
+          <select id="selectLomba" class="select-lomba">
+            <option value="">⏳ Memuat daftar lomba...</option>
+          </select>
         </div>
 
-        <select id="filterLomba" class="filter-select">
-          <option value="">Semua Lomba</option>
-        </select>
-
-        <select id="filterKategori" class="filter-select">
-          <option value="">Semua Kategori</option>
-          <option value="Anak-anak">Anak-anak</option>
-          <option value="Remaja">Remaja</option>
-          <option value="Dewasa">Dewasa</option>
-          <option value="Ibu-ibu">Ibu-ibu</option>
-          <option value="Bapak-bapak">Bapak-bapak</option>
-          <option value="Umum">Umum</option>
-        </select>
-      </div>
-
-      <div class="actions-right">
-        <a href="index.html" class="btn-action btn-primary">
-          <i class="fa-solid fa-plus"></i> Tambah Peserta
-        </a>
-        <button type="button" class="btn-action btn-success" id="btnExportCSV">
-          <i class="fa-solid fa-file-excel"></i> Export CSV
-        </button>
-        <button type="button" class="btn-action btn-outline" onclick="window.print()">
-          <i class="fa-solid fa-print"></i> Cetak Rekap
-        </button>
-      </div>
-    </section>
-
-    <!-- Lomba Sections List -->
-    <div id="lombaContainer">
-      <div class="empty-state">
-        <i class="fa-solid fa-spinner fa-spin"></i>
-        <p>Memuat data peserta realtime dari cloud...</p>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- Modal Edit Peserta -->
-  <div id="editModal" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-user-pen"></i> Edit Data Peserta</h3>
-        <button class="modal-close" id="btnCloseModal">&times;</button>
-      </div>
-      <form id="formEditPeserta">
-        <div class="modal-body">
-          <input type="hidden" id="editId" />
-
-          <div class="modal-group">
-            <label for="editNama">Nama Peserta / Tim</label>
-            <input type="text" id="editNama" required />
-          </div>
-
-          <div class="modal-group">
-            <label for="editLomba">Cabang Lomba</label>
-            <select id="editLomba" required></select>
-          </div>
-
-          <div class="modal-group">
-            <label for="editUmur">Usia (Tahun)</label>
-            <input type="number" id="editUmur" min="1" max="120" required />
-          </div>
-
-          <div class="modal-group">
-            <label for="editRtRw">Asal RT / RW</label>
-            <input type="text" id="editRtRw" />
-          </div>
-
-          <div class="modal-group">
-            <label for="editKategori">Kategori</label>
-            <select id="editKategori" required>
-              <option value="Anak-anak">Anak-anak</option>
-              <option value="Remaja">Remaja</option>
-              <option value="Dewasa">Dewasa</option>
-              <option value="Ibu-ibu">Ibu-ibu</option>
-              <option value="Bapak-bapak">Bapak-bapak</option>
-              <option value="Umum">Umum</option>
-            </select>
-          </div>
-
-          <div class="modal-group">
-            <label for="editStatus">Status Pertandingan</label>
-            <select id="editStatus" required>
-              <option value="Terdaftar">Terdaftar</option>
-              <option value="Lolos">Lolos Babak</option>
-              <option value="Gugur">Gugur</option>
-              <option value="Juara 1">🥇 Juara 1</option>
-              <option value="Juara 2">🥈 Juara 2</option>
-              <option value="Juara 3">🥉 Juara 3</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-action btn-outline" id="btnBatalEdit">Batal</button>
-          <button type="submit" class="btn-action btn-primary" id="btnSimpanEdit">
-            <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+        <div class="header-actions">
+          <button type="button" class="btn-action btn-outline" id="btnSalinHasil"
+            title="Salin hasil pertandingan untuk WhatsApp">
+            <i class="fa-solid fa-share-nodes"></i> Salin Hasil
+          </button>
+          <button type="button" class="btn-action btn-outline" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> Cetak Bagan
+          </button>
+          <button type="button" class="btn-action btn-danger-outline" id="btnResetBagan">
+            <i class="fa-solid fa-rotate-left"></i> Reset Bagan
           </button>
         </div>
-      </form>
-    </div>
-  </div>
+      </div>
+
+      <div class="header-bottom-info">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="info-badge" id="badgePesertaCount">
+            <i class="fa-solid fa-users text-primary"></i> 0 Peserta Terdaftar
+          </span>
+          <span class="info-badge" id="badgeStatusBagan">
+            <i class="fa-solid fa-circle-notch text-warning"></i> Status: Belum Dibuat
+          </span>
+        </div>
+        <div style="font-size:0.8rem; color:#64748b;">
+          💡 Klik pada nama peserta di setiap kotak pertandingan untuk menentukan pemenang yang lolos!
+        </div>
+      </div>
+    </section>
+
+    <!-- Podium Juara (Shows when final finishes) -->
+    <section id="podiumCard" class="podium-card">
+      <h2 class="podium-title">
+        <i class="fa-solid fa-crown"></i>
+        PODIUM JUARA LOMBA
+        <i class="fa-solid fa-crown"></i>
+      </h2>
+      <div class="podium-grid">
+        <!-- Juara 2 -->
+        <div class="podium-place place-2">
+          <span class="place-medal">🥈</span>
+          <div class="place-rank">Juara 2 (Perak)</div>
+          <div class="place-name" id="podiumJuara2">-</div>
+        </div>
+
+        <!-- Juara 1 -->
+        <div class="podium-place place-1">
+          <span class="place-medal">🥇</span>
+          <div class="place-rank">Juara 1 (Emas)</div>
+          <div class="place-name" id="podiumJuara1">-</div>
+        </div>
+
+        <!-- Juara 3 -->
+        <div class="podium-place place-3">
+          <span class="place-medal">🥉</span>
+          <div class="place-rank">Juara 3 (Perunggu)</div>
+          <div class="place-name" id="podiumJuara3">-</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bracket Area -->
+    <section class="bracket-workspace" id="bracketWorkspace">
+      <!-- Dynamic Content -->
+    </section>
+
+  </main>
 
   <footer>
     <p>Panitia Semarak Kemerdekaan RI 🇮🇩 &bull; Sistem Informasi & Bagan Pertandingan Lomba</p>
@@ -947,8 +944,9 @@
       getFirestore,
       collection,
       onSnapshot,
-      deleteDoc,
       doc,
+      setDoc,
+      deleteDoc,
       updateDoc
     } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
@@ -965,381 +963,741 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let pesertaData = [];
-    let lombaData = [];
+    let lombaList = [];
+    let pesertaList = [];
+    let currentLomba = "";
+    let currentBracketData = null;
+    let unsubscribeBracket = null;
 
-    const searchInput = document.getElementById("searchInput");
-    const filterLomba = document.getElementById("filterLomba");
-    const filterKategori = document.getElementById("filterKategori");
-    const lombaContainer = document.getElementById("lombaContainer");
+    const selectLomba = document.getElementById("selectLomba");
+    const bracketWorkspace = document.getElementById("bracketWorkspace");
+    const badgePesertaCount = document.getElementById("badgePesertaCount");
+    const badgeStatusBagan = document.getElementById("badgeStatusBagan");
+    const podiumCard = document.getElementById("podiumCard");
+    const btnResetBagan = document.getElementById("btnResetBagan");
+    const btnSalinHasil = document.getElementById("btnSalinHasil");
 
-    // Modal elements
-    const editModal = document.getElementById("editModal");
-    const formEditPeserta = document.getElementById("formEditPeserta");
-    const btnCloseModal = document.getElementById("btnCloseModal");
-    const btnBatalEdit = document.getElementById("btnBatalEdit");
+    // Read URL query parameter for ?lomba=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryLomba = urlParams.get("lomba");
 
     // Listen to Lomba
-    onSnapshot(collection(db, "lomba"), (snapshot) => {
-      lombaData = [];
-      snapshot.forEach((d) => {
-        lombaData.push({ id: d.id, ...d.data() });
-      });
-      updateLombaFilter();
-      render();
+    onSnapshot(collection(db, "lomba"), (snap) => {
+      lombaList = [];
+      snap.forEach((d) => lombaList.push({ id: d.id, ...d.data() }));
+      populateLombaSelect();
     });
 
     // Listen to Peserta
-    onSnapshot(collection(db, "peserta"), (snapshot) => {
-      pesertaData = [];
-      snapshot.forEach((d) => {
-        pesertaData.push({ id: d.id, ...d.data() });
-      });
-      render();
+    onSnapshot(collection(db, "peserta"), (snap) => {
+      pesertaList = [];
+      snap.forEach((d) => pesertaList.push({ id: d.id, ...d.data() }));
+      updateCurrentView();
     });
 
-    function updateLombaFilter() {
-      const curFilter = filterLomba.value;
-      filterLomba.innerHTML = '<option value="">Semua Lomba</option>';
-      lombaData.forEach((l) => {
+    function populateLombaSelect() {
+      const prevVal = currentLomba || queryLomba || "";
+      selectLomba.innerHTML = '<option value="">-- Pilih Cabang Lomba --</option>';
+
+      lombaList.forEach((l) => {
         const opt = document.createElement("option");
         opt.value = l.nama;
-        opt.textContent = l.nama;
-        if (l.nama === curFilter) opt.selected = true;
-        filterLomba.appendChild(opt);
+        opt.textContent = `🏆 ${l.nama}`;
+        if (l.nama === prevVal) opt.selected = true;
+        selectLomba.appendChild(opt);
+      });
+
+      if (!currentLomba && lombaList.length > 0) {
+        if (queryLomba && lombaList.some(l => l.nama === queryLomba)) {
+          currentLomba = queryLomba;
+        } else {
+          currentLomba = lombaList[0].nama;
+        }
+        selectLomba.value = currentLomba;
+      }
+
+      listenToBracket(currentLomba);
+    }
+
+    selectLomba.addEventListener("change", (e) => {
+      currentLomba = e.target.value;
+      listenToBracket(currentLomba);
+    });
+
+    // Helper: Clean ID for firestore doc
+    function getBracketDocId(lombaName) {
+      return encodeURIComponent(lombaName.trim().toLowerCase());
+    }
+
+    function listenToBracket(lombaName) {
+      if (unsubscribeBracket) {
+        unsubscribeBracket();
+        unsubscribeBracket = null;
+      }
+
+      if (!lombaName) {
+        currentBracketData = null;
+        updateCurrentView();
+        return;
+      }
+
+      const docId = getBracketDocId(lombaName);
+      unsubscribeBracket = onSnapshot(doc(db, "bagan", docId), (docSnap) => {
+        if (docSnap.exists()) {
+          currentBracketData = docSnap.data();
+        } else {
+          currentBracketData = null;
+        }
+        updateCurrentView();
       });
     }
 
-    searchInput.addEventListener("input", render);
-    filterLomba.addEventListener("change", render);
-    filterKategori.addEventListener("change", render);
+    function updateCurrentView() {
+      if (!currentLomba) {
+        bracketWorkspace.innerHTML = `
+          <div class="setup-screen">
+            <i class="fa-solid fa-trophy main-icon"></i>
+            <h3>Pilih Cabang Lomba</h3>
+            <p>Silakan pilih cabang lomba di atas untuk melihat atau membuat bagan pertandingan.</p>
+          </div>
+        `;
+        podiumCard.style.display = "none";
+        badgePesertaCount.innerHTML = `<i class="fa-solid fa-users"></i> 0 Peserta`;
+        badgeStatusBagan.innerHTML = `<i class="fa-solid fa-circle-question"></i> Belum Dipilih`;
+        return;
+      }
 
-    function getBadgeStatusClass(status) {
-      if (!status) return "status-terdaftar";
-      const s = status.toLowerCase();
-      if (s.includes("juara 1")) return "status-juara1";
-      if (s.includes("juara 2")) return "status-juara2";
-      if (s.includes("juara 3")) return "status-juara3";
-      if (s.includes("lolos")) return "status-lolos";
-      if (s.includes("gugur")) return "status-gugur";
-      return "status-terdaftar";
+      // Filter participants for this lomba — deduplicated by name
+      const pesertaLombaRaw = pesertaList.filter(p => p.namaLomba === currentLomba);
+      const seenPeserta = new Set();
+      const pesertaLomba = pesertaLombaRaw.filter(p => {
+        const key = (p.namaPeserta || '').trim().toLowerCase();
+        if (seenPeserta.has(key)) return false;
+        seenPeserta.add(key);
+        return true;
+      });
+
+      badgePesertaCount.innerHTML = `<i class="fa-solid fa-users text-primary"></i> ${pesertaLomba.length} Peserta Unik Terdaftar`;
+
+      if (!currentBracketData) {
+        // Render Bracket Generator Screen
+        badgeStatusBagan.innerHTML = `<i class="fa-solid fa-circle-pause text-warning"></i> Bagan Belum Dibuat`;
+        podiumCard.style.display = "none";
+        renderSetupScreen(pesertaLomba);
+      } else {
+        // Render Active Bracket
+        badgeStatusBagan.innerHTML = `<i class="fa-solid fa-circle-check text-success"></i> Bagan Aktif (${currentBracketData.bracketSize} Besar)`;
+        renderBracketTree(currentBracketData);
+      }
     }
 
-    function render() {
-      const search = searchInput.value.toLowerCase().trim();
-      const selLomba = filterLomba.value;
-      const selKategori = filterKategori.value;
+    // 1. SETUP & GENERATOR SCREEN
+    function renderSetupScreen(pesertaLomba) {
+      let chipsHtml = "";
+      pesertaLomba.forEach((p, idx) => {
+        chipsHtml += `<div class="chip"><span style="color:#ef4444; font-weight:700;">#${idx + 1}</span> ${p.namaPeserta} <small style="color:#64748b;">(${p.rtRw || '-'})</small></div>`;
+      });
 
-      // Update Statistics — deduplicated by unique name per lomba
-      const uniquePesertaSet = new Set(pesertaData.map(p => `${p.namaLomba}||${(p.namaPeserta || '').trim().toLowerCase()}`));
-      document.getElementById("statTotalPeserta").textContent = uniquePesertaSet.size;
-      document.getElementById("statTotalLomba").textContent = lombaData.length;
-
-      const setKategori = new Set(pesertaData.map(p => p.kategori).filter(Boolean));
-      document.getElementById("statTotalKategori").textContent = setKategori.size;
-
-      const setWilayah = new Set(pesertaData.map(p => p.rtRw).filter(r => r && r !== "-"));
-      document.getElementById("statTotalWilayah").textContent = setWilayah.size;
-
-      lombaContainer.innerHTML = "";
-
-      if (lombaData.length === 0) {
-        lombaContainer.innerHTML = `
-          <div class="empty-state">
-            <i class="fa-solid fa-trophy"></i>
-            <h3>Belum Ada Cabang Lomba</h3>
-            <p style="margin-top: 6px;">Silakan buat cabang lomba pertama Anda di form pendaftaran.</p>
-            <a href="index.html" class="btn-action btn-primary" style="margin-top: 15px;">
-              <i class="fa-solid fa-plus"></i> Tambah Lomba Sekarang
+      if (pesertaLomba.length < 2) {
+        bracketWorkspace.innerHTML = `
+          <div class="setup-screen">
+            <i class="fa-solid fa-users-slash main-icon" style="color: #94a3b8;"></i>
+            <h3>Peserta Belum Cukup</h3>
+            <p>Minimal dibutuhkan <b>2 peserta</b> untuk membuat bagan turnamen sistem gugur. Saat ini baru ada <b>${pesertaLomba.length}</b> peserta terdaftar.</p>
+            <a href="index.html" class="btn-action btn-primary">
+              <i class="fa-solid fa-user-plus"></i> Daftarkan Peserta Sekarang
             </a>
           </div>
         `;
         return;
       }
 
-      let visibleLombaCount = 0;
+      bracketWorkspace.innerHTML = `
+        <div class="setup-screen" id="setupMainScreen">
+          <i class="fa-solid fa-diagram-project main-icon"></i>
+          <h3>Buat Bagan Pertandingan Baru</h3>
+          <p>Ditemukan <b>${pesertaLomba.length} peserta unik</b> siap tanding pada cabang lomba <b>${currentLomba}</b>.<br>Pilih cara pengacakan atau atur urutan lawan secara manual.</p>
+          
+          <div class="participant-chips">
+            ${chipsHtml}
+          </div>
 
-      lombaData.forEach((lomba) => {
-        if (selLomba && lomba.nama !== selLomba) return;
+          <div class="setup-btn-group">
+            <button type="button" class="btn-action btn-warning" id="btnBuatAcak" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
+              <i class="fa-solid fa-shuffle"></i> 🎲 Acak Lawan &amp; Buat Bagan
+            </button>
+            <button type="button" class="btn-action btn-primary" id="btnBuatUrut" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
+              <i class="fa-solid fa-arrow-down-1-9"></i> ⚡ Buat Bagan Sesuai Urutan
+            </button>
+            <button type="button" class="btn-action btn-outline" id="btnBuatManual" style="font-size: 1rem; padding: 0.85rem 1.5rem; border-color: #7c3aed; color: #7c3aed;">
+              <i class="fa-solid fa-grip-lines"></i> ✏️ Atur Urutan Manual
+            </button>
+          </div>
+        </div>
 
-        // Filter peserta for this lomba
-        const listPesertaRaw = pesertaData.filter((p) => {
-          if (p.namaLomba !== lomba.nama) return false;
-          if (selKategori && p.kategori !== selKategori) return false;
-          if (search) {
-            const matchNama = (p.namaPeserta || "").toLowerCase().includes(search);
-            const matchRt = (p.rtRw || "").toLowerCase().includes(search);
-            const matchStatus = (p.status || "").toLowerCase().includes(search);
-            if (!matchNama && !matchRt && !matchStatus) return false;
-          }
-          return true;
+        <!-- Manual Reorder Panel (hidden by default) -->
+        <div class="manual-panel" id="manualPanel">
+          <div class="manual-panel-header">
+            <h3><i class="fa-solid fa-grip-lines" style="color:#7c3aed;"></i> Atur Urutan Peserta Manual</h3>
+            <button type="button" class="btn-action btn-outline" id="btnKembaliSetup" style="padding: 6px 14px; font-size: 0.85rem;">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">Seret dan lepas nama peserta untuk mengatur urutan. Peserta #1 vs #2, #3 vs #4, dst. akan dipertandingkan di babak pertama.</p>
+          <ul class="sortable-list" id="sortableList"></ul>
+          <div class="manual-footer">
+            <button type="button" class="btn-action btn-primary" id="btnGenFromManual" style="font-size: 1rem; padding: 0.85rem 1.75rem;">
+              <i class="fa-solid fa-check-circle"></i> Buat Bagan dengan Urutan Ini
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("btnBuatAcak").addEventListener("click", () => generateNewBracket(pesertaLomba, true));
+      document.getElementById("btnBuatUrut").addEventListener("click", () => generateNewBracket(pesertaLomba, false));
+      document.getElementById("btnBuatManual").addEventListener("click", () => showManualPanel(pesertaLomba));
+    }
+
+    // Manual reorder panel logic
+    let manualOrderedPlayers = [];
+
+    function showManualPanel(pesertaLomba) {
+      document.getElementById("setupMainScreen").style.display = "none";
+      const panel = document.getElementById("manualPanel");
+      panel.style.display = "block";
+
+      manualOrderedPlayers = pesertaLomba.map(p => ({
+        id: p.id,
+        nama: p.namaPeserta,
+        rtRw: p.rtRw || "-"
+      }));
+
+      renderSortableList();
+
+      document.getElementById("btnKembaliSetup").addEventListener("click", () => {
+        panel.style.display = "none";
+        document.getElementById("setupMainScreen").style.display = "";
+      });
+
+      document.getElementById("btnGenFromManual").addEventListener("click", () => {
+        generateNewBracketFromPlayers(manualOrderedPlayers);
+      });
+    }
+
+    function renderSortableList() {
+      const list = document.getElementById("sortableList");
+      list.innerHTML = "";
+      manualOrderedPlayers.forEach((p, idx) => {
+        const li = document.createElement("li");
+        li.className = "sortable-item";
+        li.draggable = true;
+        li.dataset.index = idx;
+        li.innerHTML = `
+          <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+          <span class="item-num">${idx + 1}</span>
+          <span class="item-name">${p.nama}</span>
+          <span class="item-meta"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${p.rtRw}</span>
+        `;
+
+        // Drag events
+        li.addEventListener("dragstart", (e) => {
+          li.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", idx);
+        });
+        li.addEventListener("dragend", () => li.classList.remove("dragging", "drag-over"));
+        li.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          li.classList.add("drag-over");
+        });
+        li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+        li.addEventListener("drop", (e) => {
+          e.preventDefault();
+          li.classList.remove("drag-over");
+          const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+          const toIdx = parseInt(li.dataset.index, 10);
+          if (fromIdx === toIdx) return;
+          const moved = manualOrderedPlayers.splice(fromIdx, 1)[0];
+          manualOrderedPlayers.splice(toIdx, 0, moved);
+          renderSortableList();
         });
 
-        // Deduplicate: keep only first entry for each unique name (case-insensitive)
-        const seenNames = new Set();
-        const listPeserta = listPesertaRaw.filter((p) => {
-          const key = (p.namaPeserta || '').trim().toLowerCase();
-          if (seenNames.has(key)) return false;
-          seenNames.add(key);
-          return true;
-        });
+        list.appendChild(li);
+      });
+    }
 
-        // If search is active and no participant matches this lomba, skip card
-        if ((search || selKategori) && listPeserta.length === 0) return;
+    // 2. GENERATE BRACKET ALGORITHM
+    async function generateNewBracket(pesertaLomba, shuffle = false) {
+      let players = pesertaLomba.map(p => ({
+        id: p.id,
+        nama: p.namaPeserta,
+        rtRw: p.rtRw || "-"
+      }));
 
-        visibleLombaCount++;
+      if (shuffle) {
+        for (let i = players.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [players[i], players[j]] = [players[j], players[i]];
+        }
+      }
 
-        const section = document.createElement("section");
-        section.className = "lomba-section";
+      await generateNewBracketFromPlayers(players);
+    }
 
-        let tableRowsHtml = "";
-        if (listPeserta.length === 0) {
-          tableRowsHtml = `
-            <tr>
-              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                <i class="fa-solid fa-user-slash" style="font-size: 1.5rem; margin-bottom: 6px; display: block;"></i>
-                Belum ada peserta yang terdaftar pada cabang lomba ini.
-              </td>
-            </tr>
-          `;
-        } else {
-          listPeserta.forEach((p, idx) => {
-            const statusClass = getBadgeStatusClass(p.status);
-            tableRowsHtml += `
-              <tr>
-                <td style="font-weight: 700; color: var(--text-muted); width: 50px;">${idx + 1}</td>
-                <td>
-                  <div style="font-weight: 700; color: var(--secondary);">${p.namaPeserta}</div>
-                </td>
-                <td>${p.umur} th</td>
-                <td><i class="fa-solid fa-location-dot" style="color: #ef4444; font-size: 0.8rem;"></i> ${p.rtRw || "-"}</td>
-                <td><span class="badge-category">${p.kategori || "Umum"}</span></td>
-                <td><span class="badge-status ${statusClass}">${p.status || "Terdaftar"}</span></td>
-                <td style="width: 90px;">
-                  <div class="action-btn-group">
-                    <button class="btn-table btn-edit" title="Edit Peserta" onclick="window.bukaEditModal('${p.id}')">
-                      <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button class="btn-table btn-del" title="Hapus Peserta" onclick="window.hapusPeserta('${p.id}', '${p.namaPeserta}')">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            `;
-          });
+    async function generateNewBracketFromPlayers(players) {
+
+      const count = players.length;
+      let bracketSize = 2;
+      if (count <= 2) bracketSize = 2;
+      else if (count <= 4) bracketSize = 4;
+      else if (count <= 8) bracketSize = 8;
+      else if (count <= 16) bracketSize = 16;
+      else bracketSize = 32;
+
+      // Calculate total rounds
+      // e.g. 8 -> 3 rounds (QF, SF, Final)
+      const numRounds = Math.log2(bracketSize);
+      const rounds = [];
+
+      // Round 0: First Round
+      const round0Matches = [];
+      const numMatchesR0 = bracketSize / 2;
+
+      // Seed slots with BYE if needed
+      // Place players into slots
+      let playerIndex = 0;
+      for (let m = 0; m < numMatchesR0; m++) {
+        const p1 = players[playerIndex++] || { nama: "BYE", isBye: true };
+        const p2 = players[playerIndex++] || { nama: "BYE", isBye: true };
+
+        const match = {
+          matchId: `r0_m${m}`,
+          roundIndex: 0,
+          matchIndex: m,
+          player1: p1,
+          player2: p2,
+          winner: null,
+          loser: null
+        };
+
+        // Auto resolve BYE
+        if (p1.isBye && !p2.isBye) {
+          match.winner = p2;
+          match.loser = p1;
+        } else if (!p1.isBye && p2.isBye) {
+          match.winner = p1;
+          match.loser = p2;
         }
 
-        section.innerHTML = `
-          <div class="lomba-header">
-            <div class="lomba-title-box">
-              <h2>🏆 ${lomba.nama}</h2>
-              <span class="badge-count">${listPeserta.length} Peserta</span>
-            </div>
-            <div class="lomba-actions">
-              <a href="bagan.html?lomba=${encodeURIComponent(lomba.nama)}" class="btn-bracket">
-                <i class="fa-solid fa-sitemap"></i> Bagan Turnamen
-              </a>
-              <button type="button" class="btn-delete-lomba" onclick="window.hapusLomba('${lomba.id}', '${lomba.nama}')">
-                <i class="fa-solid fa-trash"></i> Hapus Lomba
-              </button>
-            </div>
-          </div>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Nama Peserta / Tim</th>
-                  <th>Usia</th>
-                  <th>Asal RT/RW</th>
-                  <th>Kategori</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${tableRowsHtml}
-              </tbody>
-            </table>
-          </div>
-        `;
-
-        lombaContainer.appendChild(section);
-      });
-
-      if (visibleLombaCount === 0) {
-        lombaContainer.innerHTML = `
-          <div class="empty-state">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <h3>Tidak Ditemukan</h3>
-            <p>Tidak ada data peserta yang cocok dengan filter atau kata kunci pencarian Anda.</p>
-          </div>
-        `;
+        round0Matches.push(match);
       }
-    }
 
-    // Modal Edit Functions
-    window.bukaEditModal = (id) => {
-      const p = pesertaData.find((item) => item.id === id);
-      if (!p) return;
-
-      document.getElementById("editId").value = p.id;
-      document.getElementById("editNama").value = p.namaPeserta || "";
-      document.getElementById("editUmur").value = p.umur || "";
-      document.getElementById("editRtRw").value = p.rtRw && p.rtRw !== "-" ? p.rtRw : "";
-      document.getElementById("editKategori").value = p.kategori || "Umum";
-      document.getElementById("editStatus").value = p.status || "Terdaftar";
-
-      // populate lomba options in edit modal
-      const editLombaSelect = document.getElementById("editLomba");
-      editLombaSelect.innerHTML = "";
-      lombaData.forEach((l) => {
-        const opt = document.createElement("option");
-        opt.value = l.nama;
-        opt.textContent = l.nama;
-        if (l.nama === p.namaLomba) opt.selected = true;
-        editLombaSelect.appendChild(opt);
+      rounds.push({
+        roundIndex: 0,
+        name: getRoundName(0, numRounds),
+        matches: round0Matches
       });
 
-      editModal.style.display = "flex";
-    };
-
-    function tutupModal() {
-      editModal.style.display = "none";
-    }
-
-    btnCloseModal.addEventListener("click", tutupModal);
-    btnBatalEdit.addEventListener("click", tutupModal);
-    editModal.addEventListener("click", (e) => {
-      if (e.target === editModal) tutupModal();
-    });
-
-    // Simpan Perubahan Edit Peserta
-    formEditPeserta.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const id = document.getElementById("editId").value;
-      const namaPeserta = document.getElementById("editNama").value.trim();
-      const namaLomba = document.getElementById("editLomba").value;
-      const umur = Number(document.getElementById("editUmur").value);
-      const rtRw = document.getElementById("editRtRw").value.trim() || "-";
-      const kategori = document.getElementById("editKategori").value;
-      const status = document.getElementById("editStatus").value;
-
-      try {
-        await updateDoc(doc(db, "peserta", id), {
-          namaPeserta,
-          namaLomba,
-          umur,
-          rtRw,
-          kategori,
-          status
+      // Subsequent Rounds
+      for (let r = 1; r < numRounds; r++) {
+        const numMatches = bracketSize / Math.pow(2, r + 1);
+        const matches = [];
+        for (let m = 0; m < numMatches; m++) {
+          matches.push({
+            matchId: `r${r}_m${m}`,
+            roundIndex: r,
+            matchIndex: m,
+            player1: null,
+            player2: null,
+            winner: null,
+            loser: null
+          });
+        }
+        rounds.push({
+          roundIndex: r,
+          name: getRoundName(r, numRounds),
+          matches
         });
+      }
 
-        tutupModal();
+      // Propagate Auto-BYEs from Round 0 to Round 1 if any
+      propagateWinners(rounds, numRounds);
+
+      // Third Place Match (if tournament size >= 4)
+      let thirdPlaceMatch = null;
+      if (bracketSize >= 4) {
+        thirdPlaceMatch = {
+          matchId: "third_place",
+          name: "Perebutan Juara 3",
+          player1: null,
+          player2: null,
+          winner: null,
+          loser: null
+        };
+      }
+
+      const bracketPayload = {
+        lombaNama: currentLomba,
+        bracketSize,
+        numRounds,
+        rounds,
+        thirdPlaceMatch,
+        juara1: null,
+        juara2: null,
+        juara3: null,
+        updatedAt: new Date()
+      };
+
+      const docId = getBracketDocId(currentLomba);
+      try {
+        await setDoc(doc(db, "bagan", docId), bracketPayload);
         Swal.fire({
           icon: 'success',
-          title: 'Berhasil Diperbarui',
-          text: `Data peserta ${namaPeserta} telah diperbarui.`,
-          timer: 1500,
+          title: 'Bagan Berhasil Dibuat!',
+          text: `Bagan sistem gugur ${bracketSize} besar siap dimainkan.`,
+          timer: 1800,
           showConfirmButton: false
         });
       } catch (err) {
         console.error(err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal',
-          text: 'Tidak dapat memperbarui data peserta.',
-          confirmButtonColor: '#c90024'
-        });
+        Swal.fire('Gagal', 'Tidak dapat membuat bagan pertandingan.', 'error');
       }
-    });
+    }
 
-    // Hapus Peserta
-    window.hapusPeserta = async (id, nama) => {
+    function getRoundName(roundIndex, totalRounds) {
+      const remaining = totalRounds - roundIndex;
+      if (remaining === 1) return "🏆 GRAND FINAL";
+      if (remaining === 2) return "Semifinal";
+      if (remaining === 3) return "Perempat Final (8 Besar)";
+      if (remaining === 4) return "Babak 16 Besar";
+      if (remaining === 5) return "Babak 32 Besar";
+      return `Babak ${roundIndex + 1}`;
+    }
+
+    function propagateWinners(rounds, numRounds) {
+      for (let r = 0; r < numRounds - 1; r++) {
+        const curRound = rounds[r];
+        const nextRound = rounds[r + 1];
+
+        for (let m = 0; m < curRound.matches.length; m++) {
+          const match = curRound.matches[m];
+          const nextMatchIndex = Math.floor(m / 2);
+          const isSlot1 = m % 2 === 0;
+
+          if (nextRound && nextRound.matches[nextMatchIndex]) {
+            if (isSlot1) {
+              nextRound.matches[nextMatchIndex].player1 = match.winner || null;
+            } else {
+              nextRound.matches[nextMatchIndex].player2 = match.winner || null;
+            }
+          }
+        }
+      }
+    }
+
+    // 3. RENDER BRACKET TREE
+    function renderBracketTree(bracketData) {
+      const { rounds, thirdPlaceMatch, juara1, juara2, juara3, numRounds } = bracketData;
+
+      // Update Podium
+      if (juara1 || juara2 || juara3) {
+        podiumCard.style.display = "block";
+        document.getElementById("podiumJuara1").textContent = juara1 ? juara1.nama : "-";
+        document.getElementById("podiumJuara2").textContent = juara2 ? juara2.nama : "-";
+        document.getElementById("podiumJuara3").textContent = juara3 ? juara3.nama : "-";
+      } else {
+        podiumCard.style.display = "none";
+      }
+
+      let wrapperHtml = `<div class="bracket-wrapper">`;
+
+      rounds.forEach((round, rIdx) => {
+        const isFinal = rIdx === numRounds - 1;
+        wrapperHtml += `
+          <div class="round-column">
+            <div class="round-header ${isFinal ? 'final-header' : ''}">
+              ${isFinal ? '<i class="fa-solid fa-crown"></i> ' : ''}${round.name}
+            </div>
+            <div class="round-matches">
+        `;
+
+        round.matches.forEach((match, mIdx) => {
+          wrapperHtml += buildMatchHtml(match, rIdx, isFinal);
+        });
+
+        // If Final round and there is third place match, append it
+        if (isFinal && thirdPlaceMatch) {
+          wrapperHtml += `
+            <div class="third-place-box match-box">
+              <div class="match-tag">
+                <span>🥉 Perebutan Juara 3</span>
+              </div>
+              ${buildSlotHtml(thirdPlaceMatch.player1, thirdPlaceMatch.winner, 'third', 1)}
+              ${buildSlotHtml(thirdPlaceMatch.player2, thirdPlaceMatch.winner, 'third', 2)}
+            </div>
+          `;
+        }
+
+        wrapperHtml += `
+            </div>
+          </div>
+        `;
+      });
+
+      wrapperHtml += `</div>`;
+      bracketWorkspace.innerHTML = wrapperHtml;
+
+      // Attach Click Handlers to Match Slots
+      attachSlotListeners(bracketData);
+    }
+
+    function buildMatchHtml(match, roundIdx, isFinal) {
+      const tagText = isFinal ? "🏆 FINAL MATCH" : `Match #${match.matchIndex + 1}`;
+      return `
+        <div class="match-box" id="box_${match.matchId}">
+          <div class="match-tag">
+            <span>${tagText}</span>
+            ${match.winner ? '<span style="color:#059669;"><i class="fa-solid fa-check"></i> Selesai</span>' : '<span style="color:#94a3b8;">Pending</span>'}
+          </div>
+          ${buildSlotHtml(match.player1, match.winner, match.matchId, 1)}
+          ${buildSlotHtml(match.player2, match.winner, match.matchId, 2)}
+        </div>
+      `;
+    }
+
+    function buildSlotHtml(player, winner, matchId, slotNum) {
+      if (!player) {
+        return `
+          <div class="participant-slot empty" data-match="${matchId}" data-slot="${slotNum}">
+            <div class="slot-info">
+              <span class="seed-num">-</span>
+              <span class="slot-name">Menunggu Pemenang...</span>
+            </div>
+          </div>
+        `;
+      }
+
+      if (player.isBye) {
+        return `
+          <div class="participant-slot loser" data-match="${matchId}" data-slot="${slotNum}">
+            <div class="slot-info">
+              <span class="seed-num">#</span>
+              <span class="slot-name" style="color:#94a3b8; font-style:italic;">BYE (Kosong)</span>
+            </div>
+            <span class="badge-bye">BYE</span>
+          </div>
+        `;
+      }
+
+      const isWin = winner && winner.nama === player.nama;
+      const isLose = winner && winner.nama !== player.nama;
+      const slotClass = isWin ? "winner" : (isLose ? "loser" : "");
+
+      return `
+        <div class="participant-slot ${slotClass}" data-match="${matchId}" data-slot="${slotNum}" data-name="${encodeURIComponent(player.nama)}">
+          <div class="slot-info">
+            <span class="seed-num"><i class="fa-solid fa-user" style="font-size:0.65rem;"></i></span>
+            <span class="slot-name" title="${player.nama} (${player.rtRw || '-'})">${player.nama}</span>
+          </div>
+          ${isWin ? '<span class="slot-badge badge-win"><i class="fa-solid fa-trophy"></i> Menang</span>' : ''}
+        </div>
+      `;
+    }
+
+    // 4. ATTACH MATCH ACTIONS & SCORE/WINNER ADVANCE
+    function attachSlotListeners(bracketData) {
+      const slots = bracketWorkspace.querySelectorAll(".participant-slot:not(.empty)");
+      slots.forEach((slot) => {
+        slot.addEventListener("click", () => {
+          const matchId = slot.getAttribute("data-match");
+          const slotNum = Number(slot.getAttribute("data-slot"));
+          const nameEnc = slot.getAttribute("data-name");
+          if (!nameEnc) return;
+          const chosenName = decodeURIComponent(nameEnc);
+
+          handlePickWinner(bracketData, matchId, slotNum, chosenName);
+        });
+      });
+    }
+
+    async function handlePickWinner(bracketData, matchId, slotNum, chosenName) {
+      let targetMatch = null;
+      let isThirdPlace = (matchId === "third_place");
+
+      if (isThirdPlace) {
+        targetMatch = bracketData.thirdPlaceMatch;
+      } else {
+        for (const r of bracketData.rounds) {
+          const m = r.matches.find(item => item.matchId === matchId);
+          if (m) {
+            targetMatch = m;
+            break;
+          }
+        }
+      }
+
+      if (!targetMatch || !targetMatch.player1 || !targetMatch.player2) {
+        return;
+      }
+
+      if (targetMatch.player1.isBye || targetMatch.player2.isBye) {
+        return; // Auto resolved
+      }
+
+      const p1 = targetMatch.player1;
+      const p2 = targetMatch.player2;
+      const chosenPlayer = (p1.nama === chosenName) ? p1 : p2;
+      const loserPlayer = (p1.nama === chosenName) ? p2 : p1;
+
+      const confirmRes = await Swal.fire({
+        title: 'Tentukan Pemenang?',
+        html: `Apakah <b>${chosenPlayer.nama}</b> memenangkan pertandingan ini melawan <b>${loserPlayer.nama}</b>?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '🏆 Ya, Jadikan Pemenang',
+        cancelButtonText: 'Batal'
+      });
+
+      if (!confirmRes.isConfirmed) return;
+
+      // Set winner and loser
+      targetMatch.winner = chosenPlayer;
+      targetMatch.loser = loserPlayer;
+
+      // Check if this was Semifinal (to send losers to third place match)
+      const numRounds = bracketData.numRounds;
+      if (bracketData.thirdPlaceMatch && targetMatch.roundIndex === numRounds - 2) {
+        if (targetMatch.matchIndex === 0) {
+          bracketData.thirdPlaceMatch.player1 = loserPlayer;
+        } else if (targetMatch.matchIndex === 1) {
+          bracketData.thirdPlaceMatch.player2 = loserPlayer;
+        }
+      }
+
+      // Check if this was Grand Final
+      let isFinalWinner = false;
+      if (targetMatch.roundIndex === numRounds - 1) {
+        bracketData.juara1 = chosenPlayer;
+        bracketData.juara2 = loserPlayer;
+        isFinalWinner = true;
+      }
+
+      // Check if this was Third Place Match
+      if (isThirdPlace) {
+        bracketData.juara3 = chosenPlayer;
+      }
+
+      // Propagate all winners across the entire bracket tree
+      propagateWinners(bracketData.rounds, numRounds);
+
+      // Save updated bracket state to Firestore
+      const docId = getBracketDocId(currentLomba);
+      try {
+        bracketData.updatedAt = new Date();
+        await setDoc(doc(db, "bagan", docId), bracketData);
+
+        // Also update participants status in Firestore
+        if (chosenPlayer.id) {
+          const statusText = isFinalWinner ? "Juara 1" : (isThirdPlace ? "Juara 3" : "Lolos");
+          await updateDoc(doc(db, "peserta", chosenPlayer.id), { status: statusText }).catch(() => { });
+        }
+        if (loserPlayer.id) {
+          const loserStatus = isFinalWinner ? "Juara 2" : "Gugur";
+          await updateDoc(doc(db, "peserta", loserPlayer.id), { status: loserStatus }).catch(() => { });
+        }
+
+        if (isFinalWinner) {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+          Swal.fire({
+            icon: 'success',
+            title: 'SELAMAT! 🎉',
+            html: `<b>${chosenPlayer.nama}</b> berhasil menjadi <b>JUARA 1 (EMAS)</b> pada lomba <b>${currentLomba}</b>!`,
+            confirmButtonColor: '#f59e0b',
+            confirmButtonText: 'Tutup & Rayakan'
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        Swal.fire('Gagal Menyimpan', 'Terjadi masalah saat memperbarui hasil bagan.', 'error');
+      }
+    }
+
+    // 5. RESET BAGAN
+    btnResetBagan.addEventListener("click", async () => {
+      if (!currentLomba || !currentBracketData) {
+        Swal.fire('Info', 'Belum ada bagan yang aktif untuk direset.', 'info');
+        return;
+      }
+
       const res = await Swal.fire({
-        title: 'Hapus Peserta?',
-        html: `Apakah Anda yakin ingin menghapus data <b>${nama}</b>?`,
+        title: 'Reset Bagan Pertandingan?',
+        html: `Bagan lomba <b>${currentLomba}</b> dan seluruh hasil pertandingan akan dihapus dan dapat dibuat ulang.<br><br>Apakah Anda yakin?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#c90024',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'Ya, Hapus',
+        confirmButtonText: 'Ya, Reset Bagan',
         cancelButtonText: 'Batal'
       });
 
       if (res.isConfirmed) {
+        const docId = getBracketDocId(currentLomba);
         try {
-          await deleteDoc(doc(db, "peserta", id));
+          await deleteDoc(doc(db, "bagan", docId));
           Swal.fire({
             icon: 'success',
-            title: 'Terhapus!',
-            text: `Peserta ${nama} berhasil dihapus.`,
+            title: 'Bagan Direset',
+            text: 'Bagan siap dibuat ulang.',
             timer: 1500,
             showConfirmButton: false
           });
         } catch (err) {
           console.error(err);
-          Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus data.', 'error');
+          Swal.fire('Gagal', 'Terjadi masalah saat mereset bagan.', 'error');
         }
       }
-    };
+    });
 
-    // Hapus Lomba & Semua Peserta Terkait
-    window.hapusLomba = async (id, nama) => {
-      const pesertaTerkait = pesertaData.filter(p => p.namaLomba === nama);
-      const res = await Swal.fire({
-        title: 'Hapus Cabang Lomba?',
-        html: `Menghapus lomba <b>${nama}</b> juga akan menghapus <b>${pesertaTerkait.length}</b> peserta di dalamnya.<br><br>Apakah Anda yakin?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#c90024',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'Ya, Hapus Semua',
-        cancelButtonText: 'Batal'
-      });
-
-      if (res.isConfirmed) {
-        try {
-          for (const p of pesertaTerkait) {
-            await deleteDoc(doc(db, "peserta", p.id));
-          }
-          await deleteDoc(doc(db, "lomba", id));
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Lomba Dihapus',
-            text: `Lomba ${nama} dan seluruh peserta telah dihapus.`,
-            timer: 2000,
-            showConfirmButton: false
-          });
-        } catch (err) {
-          console.error(err);
-          Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus lomba.', 'error');
-        }
-      }
-    };
-
-    // Export to CSV
-    document.getElementById("btnExportCSV").addEventListener("click", () => {
-      if (pesertaData.length === 0) {
-        Swal.fire('Data Kosong', 'Belum ada data peserta untuk diekspor.', 'info');
+    // 6. SALIN HASIL UNTUK WHATSAPP
+    btnSalinHasil.addEventListener("click", () => {
+      if (!currentLomba || !currentBracketData) {
+        Swal.fire('Info', 'Belum ada bagan yang aktif untuk disalin.', 'info');
         return;
       }
 
-      let csv = "No,Nama Peserta,Cabang Lomba,Usia,Asal RT/RW,Kategori,Status\n";
-      pesertaData.forEach((p, i) => {
-        csv += `"${i + 1}","${(p.namaPeserta || '').replace(/"/g, '""')}","${(p.namaLomba || '').replace(/"/g, '""')}","${p.umur || ''}","${(p.rtRw || '').replace(/"/g, '""')}","${(p.kategori || '').replace(/"/g, '""')}","${(p.status || '').replace(/"/g, '""')}"\n`;
-      });
+      const { juara1, juara2, juara3, rounds } = currentBracketData;
+      let text = `🇮🇩 *HASIL PERTANDINGAN LOMBA 17 AGUSTUS*\n`;
+      text += `🏆 *Cabang Lomba:* ${currentLomba}\n`;
+      text += `📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID', { dateStyle: 'full' })}\n\n`;
 
-      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Rekap_Peserta_Lomba_17Agustus_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (juara1 || juara2 || juara3) {
+        text += `🎖️ *DAFTAR JUARA:*\n`;
+        if (juara1) text += `🥇 *Juara 1 (Emas):* ${juara1.nama} (${juara1.rtRw || '-'})\n`;
+        if (juara2) text += `🥈 *Juara 2 (Perak):* ${juara2.nama} (${juara2.rtRw || '-'})\n`;
+        if (juara3) text += `🥉 *Juara 3 (Perunggu):* ${juara3.nama} (${juara3.rtRw || '-'})\n`;
+        text += `\n`;
+      }
+
+      text += `Selamat kepada para pemenang dan terima kasih atas partisipasi seluruh warga! 🇮🇩✨\n`;
+      text += `_Panitia Semarak Kemerdekaan RI_`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Hasil Disalin! 📋',
+          text: 'Ringkasan hasil pertandingan telah disalin ke clipboard dan siap dikirim ke WhatsApp.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }).catch(() => {
+        Swal.fire('Gagal', 'Tidak dapat menyalin teks.', 'error');
+      });
     });
   </script>
 </body>
