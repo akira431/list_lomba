@@ -622,6 +622,118 @@
       flex-wrap: wrap;
     }
 
+    /* Manual Reorder Panel */
+    .manual-panel {
+      display: none;
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .manual-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px dashed #f1f5f9;
+    }
+
+    .manual-panel-header h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sortable-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 4px 2px;
+    }
+
+    .sortable-item {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: grab;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .sortable-item:hover {
+      border-color: var(--primary);
+      background: #fff5f6;
+      box-shadow: 0 2px 8px rgba(201,0,36,0.08);
+    }
+
+    .sortable-item.dragging {
+      opacity: 0.45;
+      cursor: grabbing;
+    }
+
+    .sortable-item.drag-over {
+      border-color: var(--primary);
+      background: #fff0f3;
+      transform: scale(1.02);
+    }
+
+    .drag-handle {
+      color: #94a3b8;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .sortable-item:hover .drag-handle {
+      color: var(--primary);
+    }
+
+    .item-num {
+      background: var(--primary);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .item-name {
+      font-weight: 700;
+      color: var(--secondary);
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    .item-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .manual-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
     /* Print styling */
     @media print {
 
@@ -955,9 +1067,17 @@
         return;
       }
 
-      // Filter participants for this lomba
-      const pesertaLomba = pesertaList.filter(p => p.namaLomba === currentLomba);
-      badgePesertaCount.innerHTML = `<i class="fa-solid fa-users text-primary"></i> ${pesertaLomba.length} Peserta Terdaftar`;
+      // Filter participants for this lomba — deduplicated by name
+      const pesertaLombaRaw = pesertaList.filter(p => p.namaLomba === currentLomba);
+      const seenPeserta = new Set();
+      const pesertaLomba = pesertaLombaRaw.filter(p => {
+        const key = (p.namaPeserta || '').trim().toLowerCase();
+        if (seenPeserta.has(key)) return false;
+        seenPeserta.add(key);
+        return true;
+      });
+
+      badgePesertaCount.innerHTML = `<i class="fa-solid fa-users text-primary"></i> ${pesertaLomba.length} Peserta Unik Terdaftar`;
 
       if (!currentBracketData) {
         // Render Bracket Generator Screen
@@ -993,10 +1113,10 @@
       }
 
       bracketWorkspace.innerHTML = `
-        <div class="setup-screen">
+        <div class="setup-screen" id="setupMainScreen">
           <i class="fa-solid fa-diagram-project main-icon"></i>
           <h3>Buat Bagan Pertandingan Baru</h3>
-          <p>Ditemukan <b>${pesertaLomba.length} peserta</b> siap tanding pada cabang lomba <b>${currentLomba}</b>. Anda dapat mengacak peserta secara acak adil atau sesuai urutan daftar.</p>
+          <p>Ditemukan <b>${pesertaLomba.length} peserta unik</b> siap tanding pada cabang lomba <b>${currentLomba}</b>.<br>Pilih cara pengacakan atau atur urutan lawan secara manual.</p>
           
           <div class="participant-chips">
             ${chipsHtml}
@@ -1004,10 +1124,30 @@
 
           <div class="setup-btn-group">
             <button type="button" class="btn-action btn-warning" id="btnBuatAcak" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
-              <i class="fa-solid fa-shuffle"></i> 🎲 Acak Lawan & Buat Bagan
+              <i class="fa-solid fa-shuffle"></i> 🎲 Acak Lawan &amp; Buat Bagan
             </button>
             <button type="button" class="btn-action btn-primary" id="btnBuatUrut" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
               <i class="fa-solid fa-arrow-down-1-9"></i> ⚡ Buat Bagan Sesuai Urutan
+            </button>
+            <button type="button" class="btn-action btn-outline" id="btnBuatManual" style="font-size: 1rem; padding: 0.85rem 1.5rem; border-color: #7c3aed; color: #7c3aed;">
+              <i class="fa-solid fa-grip-lines"></i> ✏️ Atur Urutan Manual
+            </button>
+          </div>
+        </div>
+
+        <!-- Manual Reorder Panel (hidden by default) -->
+        <div class="manual-panel" id="manualPanel">
+          <div class="manual-panel-header">
+            <h3><i class="fa-solid fa-grip-lines" style="color:#7c3aed;"></i> Atur Urutan Peserta Manual</h3>
+            <button type="button" class="btn-action btn-outline" id="btnKembaliSetup" style="padding: 6px 14px; font-size: 0.85rem;">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">Seret dan lepas nama peserta untuk mengatur urutan. Peserta #1 vs #2, #3 vs #4, dst. akan dipertandingkan di babak pertama.</p>
+          <ul class="sortable-list" id="sortableList"></ul>
+          <div class="manual-footer">
+            <button type="button" class="btn-action btn-primary" id="btnGenFromManual" style="font-size: 1rem; padding: 0.85rem 1.75rem;">
+              <i class="fa-solid fa-check-circle"></i> Buat Bagan dengan Urutan Ini
             </button>
           </div>
         </div>
@@ -1015,6 +1155,75 @@
 
       document.getElementById("btnBuatAcak").addEventListener("click", () => generateNewBracket(pesertaLomba, true));
       document.getElementById("btnBuatUrut").addEventListener("click", () => generateNewBracket(pesertaLomba, false));
+      document.getElementById("btnBuatManual").addEventListener("click", () => showManualPanel(pesertaLomba));
+    }
+
+    // Manual reorder panel logic
+    let manualOrderedPlayers = [];
+
+    function showManualPanel(pesertaLomba) {
+      document.getElementById("setupMainScreen").style.display = "none";
+      const panel = document.getElementById("manualPanel");
+      panel.style.display = "block";
+
+      manualOrderedPlayers = pesertaLomba.map(p => ({
+        id: p.id,
+        nama: p.namaPeserta,
+        rtRw: p.rtRw || "-"
+      }));
+
+      renderSortableList();
+
+      document.getElementById("btnKembaliSetup").addEventListener("click", () => {
+        panel.style.display = "none";
+        document.getElementById("setupMainScreen").style.display = "";
+      });
+
+      document.getElementById("btnGenFromManual").addEventListener("click", () => {
+        generateNewBracketFromPlayers(manualOrderedPlayers);
+      });
+    }
+
+    function renderSortableList() {
+      const list = document.getElementById("sortableList");
+      list.innerHTML = "";
+      manualOrderedPlayers.forEach((p, idx) => {
+        const li = document.createElement("li");
+        li.className = "sortable-item";
+        li.draggable = true;
+        li.dataset.index = idx;
+        li.innerHTML = `
+          <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+          <span class="item-num">${idx + 1}</span>
+          <span class="item-name">${p.nama}</span>
+          <span class="item-meta"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${p.rtRw}</span>
+        `;
+
+        // Drag events
+        li.addEventListener("dragstart", (e) => {
+          li.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", idx);
+        });
+        li.addEventListener("dragend", () => li.classList.remove("dragging", "drag-over"));
+        li.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          li.classList.add("drag-over");
+        });
+        li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+        li.addEventListener("drop", (e) => {
+          e.preventDefault();
+          li.classList.remove("drag-over");
+          const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+          const toIdx = parseInt(li.dataset.index, 10);
+          if (fromIdx === toIdx) return;
+          const moved = manualOrderedPlayers.splice(fromIdx, 1)[0];
+          manualOrderedPlayers.splice(toIdx, 0, moved);
+          renderSortableList();
+        });
+
+        list.appendChild(li);
+      });
     }
 
     // 2. GENERATE BRACKET ALGORITHM
@@ -1031,6 +1240,11 @@
           [players[i], players[j]] = [players[j], players[i]];
         }
       }
+
+      await generateNewBracketFromPlayers(players);
+    }
+
+    async function generateNewBracketFromPlayers(players) {
 
       const count = players.length;
       let bracketSize = 2;
