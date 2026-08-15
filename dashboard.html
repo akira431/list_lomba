@@ -1030,8 +1030,9 @@
       const selLomba = filterLomba.value;
       const selKategori = filterKategori.value;
 
-      // Update Statistics
-      document.getElementById("statTotalPeserta").textContent = pesertaData.length;
+      // Update Statistics — deduplicated by unique name per lomba
+      const uniquePesertaSet = new Set(pesertaData.map(p => `${p.namaLomba}||${(p.namaPeserta || '').trim().toLowerCase()}`));
+      document.getElementById("statTotalPeserta").textContent = uniquePesertaSet.size;
       document.getElementById("statTotalLomba").textContent = lombaData.length;
 
       const setKategori = new Set(pesertaData.map(p => p.kategori).filter(Boolean));
@@ -1062,7 +1063,7 @@
         if (selLomba && lomba.nama !== selLomba) return;
 
         // Filter peserta for this lomba
-        const listPeserta = pesertaData.filter((p) => {
+        const listPesertaRaw = pesertaData.filter((p) => {
           if (p.namaLomba !== lomba.nama) return false;
           if (selKategori && p.kategori !== selKategori) return false;
           if (search) {
@@ -1071,6 +1072,15 @@
             const matchStatus = (p.status || "").toLowerCase().includes(search);
             if (!matchNama && !matchRt && !matchStatus) return false;
           }
+          return true;
+        });
+
+        // Deduplicate: keep only first entry for each unique name (case-insensitive)
+        const seenNames = new Set();
+        const listPeserta = listPesertaRaw.filter((p) => {
+          const key = (p.namaPeserta || '').trim().toLowerCase();
+          if (seenNames.has(key)) return false;
+          seenNames.add(key);
           return true;
         });
 
